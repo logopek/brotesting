@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h1>{{ quiz.title }}</h1>
+<p>{{ quiz.description }}</p>
+{% for question in questions %}
+<p>{{ question.text }}</p>
+{% endfor %}
+{% endblock %}
