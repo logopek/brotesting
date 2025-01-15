@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'users.apps.UsersConfig',
     'django_bootstrap5',
 ]
 
@@ -128,3 +129,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'

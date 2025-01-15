@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, ListView, DetailView
+from django.contrib.auth import logout
 
 from .models import Course, Question, Quiz
 
