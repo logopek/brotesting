@@ -9,16 +9,16 @@
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-8">
-                    <h5 class="text-muted">Course: {{ quiz.course.name }}</h5>
+                    <h5 class="text-muted">Дисциплина: {{ quiz.course.name }}</h5>
                     <p class="lead">{{ quiz.description }}</p>
                 </div>
                 <div class="col-md-4">
                     <div class="card bg-light">
                         <div class="card-body">
-                            <h5 class="card-title">Quiz Details</h5>
+                            <h5 class="card-title">Подробности теста</h5>
                             <ul class="list-unstyled">
-                                <li><i class="bi bi-clock"></i> Time Limit: {{ quiz.time_limit }} minutes</li>
-                                <li><i class="bi bi-trophy"></i> Passing Score: {{ quiz.passing_score }}%</li>
+                                <li><i class="bi bi-clock"></i> Ограничение времени: {{ quiz.time_limit }} минут</li>
+                                <li><i class="bi bi-trophy"></i> Проходной балл: {{ quiz.passing_score }}%</li>
                             </ul>
                         </div>
                     </div>
@@ -27,10 +27,10 @@
 
             <div class="d-grid gap-2 col-6 mx-auto">
                 <a href="{% url 'core:quiz_detail' quiz.id %}" class="btn btn-success btn-lg">
-                    Start Quiz
+                    Начать тест
                 </a>
                 <a href="{% url 'core:quiz_list' %}" class="btn btn-outline-secondary">
-                    Back to Quiz List
+                    Вернуться к списку тестов
                 </a>
             </div>
         </div>
@@ -39,17 +39,17 @@
     {% if user.is_authenticated and previous_attempts %}
     <div class="card mt-4">
         <div class="card-header">
-            <h3 class="card-title">Previous Attempts</h3>
+            <h3 class="card-title">Предыдущие попытки</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Attempt #</th>
-                            <th>Date</th>
-                            <th>Score</th>
-                            <th>Status</th>
+                            <th>Номер попытки</th>
+                            <th>Дата</th>
+                            <th>Баллы</th>
+                            <th>Статус</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,11 +60,11 @@
                             <td>{{ attempt.score|default:"Not completed" }}</td>
                             <td>
                                 {% if attempt.score >= quiz.passing_score %}
-                                <span class="badge bg-success">Passed</span>
+                                <span class="badge bg-success">Пройден</span>
                                 {% elif attempt.score %}
-                                <span class="badge bg-danger">Failed</span>
+                                <span class="badge bg-danger">Не пройден</span>
                                 {% else %}
-                                <span class="badge bg-warning">Incomplete</span>
+                                <span class="badge bg-warning">Не завершен</span>
                                 {% endif %}
                             </td>
                         </tr>

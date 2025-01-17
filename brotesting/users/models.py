@@ -4,7 +4,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 from users.constants import (MAX_USERNAME_LENGTH,
-                             MAX_ROLE_LENGTH, MAX_GROUP_NAME_LENGTH)
+                             MAX_ROLE_LENGTH)
 from .validators import validate_username
 
 
@@ -48,19 +48,6 @@ class User(AbstractUser):
         verbose_name='Активен'
     )
 
-    group_name = models.CharField(
-        max_length=MAX_GROUP_NAME_LENGTH,
-        verbose_name='Группа',
-        blank=True,
-        null=True
-    )
-
-    bio = models.TextField(
-        blank=True,
-        default='',
-        verbose_name='Биография'
-    )
-
     class Meta:
         """Метаданные модели пользователя."""
 
@@ -82,6 +69,11 @@ class User(AbstractUser):
     def is_teacher(self):
         """Проверка на преподавателя."""
         return self.role == UserRole.TEACHER
+
+    @property
+    def is_student(self):
+        """Проверка на студента."""
+        return self.role == UserRole.STUDENT
 
     def __str__(self):
         """Строковое представление пользователя."""

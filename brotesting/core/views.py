@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
-from django.views.generic import View, ListView, DetailView
-from django.contrib.auth import logout
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import View, ListView, DetailView, CreateView
+
 
 from .models import Course, Question, Quiz
 
@@ -30,3 +31,10 @@ class QuizDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['questions'] = Question.objects.filter(quiz=self.object)
         return context
+
+
+class QuizCreateView(CreateView):
+    model = Quiz
+    template_name = 'core/quiz_create.html'
+    fields = ['title', 'course', 'description', 'time_limit', 'passing_score']
+    success_url = reverse_lazy('core:quiz_list')
