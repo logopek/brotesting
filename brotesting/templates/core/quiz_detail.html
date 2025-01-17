@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h1 class="card-title mb-0">{{ quiz.title }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h5 class="text-muted">Дисциплина: {{ quiz.course.name }}</h5>
+                    <p class="lead">{{ quiz.description }}</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">Подробности теста</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="bi bi-clock"></i> Ограничение времени: {{ quiz.time_limit }} минут</li>
+                                <li><i class="bi bi-trophy"></i> Проходной балл: {{ quiz.passing_score }}%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <a href="{% url 'core:quiz_detail' quiz.id %}" class="btn btn-success btn-lg">
+                    Начать тест
+                </a>
+                <a href="{% url 'core:quiz_list' %}" class="btn btn-outline-secondary">
+                    Вернуться к списку тестов
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_authenticated and previous_attempts %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3 class="card-title">Предыдущие попытки</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Номер попытки</th>
+                            <th>Дата</th>
+                            <th>Баллы</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attempt in previous_attempts %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ attempt.started_at|date:"M d, Y H:i" }}</td>
+                            <td>{{ attempt.score|default:"Not completed" }}</td>
+                            <td>
+                                {% if attempt.score >= quiz.passing_score %}
+                                <span class="badge bg-success">Пройден</span>
+                                {% elif attempt.score %}
+                                <span class="badge bg-danger">Не пройден</span>
+                                {% else %}
+                                <span class="badge bg-warning">Не завершен</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

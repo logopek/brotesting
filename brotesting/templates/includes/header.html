@@ -1,0 +1,24 @@
+{% load static %}
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'core:index' %}">Super Earth Testing App</a>
+      <div class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          {% if user.is_student %}
+            <a class="nav-link" href="{% url 'core:quiz_list' %}">Мои тесты</a>
+          {% else %}
+            <a class="nav-link" href="{% url 'core:quiz_create' %}">Создать тест</a>
+          {% endif %}
+          <form method="post" action="{% url 'users:logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="nav-link btn btn-link">Выйти</button>
+          </form>
+        {% else %}
+          <a class="nav-link" href="{% url 'users:login' %}">Войти</a>
+          <a class="nav-link" href="{% url 'users:registration' %}">Зарегистрироваться</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+</header>
