@@ -6,7 +6,6 @@ from core.models import StudentGroup
 
 class UserRegistrationForm(UserCreationForm):
     """Форма для регистрации пользователя."""
-
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields
+        fields = tuple(["username","email", "password1", "password2"])
