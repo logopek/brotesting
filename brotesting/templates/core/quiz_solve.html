@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="container mt-4">
+        <form method="post" novalidate action="sults">
+            {% csrf_token %}
+            {% for i in questions %}
+                <div>
+                    <h2>{{ i.question_text }}</h2>
+                    {% if i.question_type == "MCQ" %}
+                            {% for x in i.choices.all %}
+                                <input type="checkbox" id="{{x.id}}">
+                                <label for="{{ x.id }}">{{ x.choice_text }}</label>
+                            {% endfor %}
+                    {%  endif  %}
+                </div>
+            
+            {% endfor %}
+            {% bootstrap_button button_type="submit" content="Отправить" %}
+        </form>
+    </div>
+{% endblock %}

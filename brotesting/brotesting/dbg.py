@@ -1,2 +1,2 @@
 DEBUG = True
-SECRET_KEY = "arrt21sc"
+SECRET_KEY = "arrt21scsadcxczc"

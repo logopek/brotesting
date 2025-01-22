@@ -5,6 +5,9 @@ User = get_user_model()
 
 
 class Course(models.Model):
+    class Meta:
+        verbose_name = "Course"
+        verbose_name_plural = "Courses"
     """Учебная дисциплина"""
     name = models.CharField('Название', max_length=200)
     description = models.TextField('Описание')
@@ -15,6 +18,9 @@ class Course(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Дата создания')
 
+
+    def __str__(self):
+        return str(self.name)
 
 class Quiz(models.Model):
     """Тест по предмету"""
@@ -27,6 +33,9 @@ class Quiz(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Дата создания')
 
+    def __str__(self):
+        return f'ID:{str(self.id)} ; {str(self.title)}'
+
 
 class Question(models.Model):
     """Вопрос в тесте"""
@@ -37,20 +46,26 @@ class Question(models.Model):
     )
 
     quiz = models.ForeignKey(
-        Quiz, on_delete=models.CASCADE, verbose_name='Тест')
+        Quiz, on_delete=models.CASCADE, verbose_name='Тест', related_name="questions")
     question_text = models.TextField(verbose_name='Текст вопроса')
     question_type = models.CharField(
         max_length=3, choices=QUESTION_TYPES, verbose_name='Тип вопроса')
     points = models.IntegerField(default=1, verbose_name='Баллы')
 
+    def __str__(self):
+        return f'ID:{str(self.id)} ; {str(self.question_text)}'
+
 
 class Choice(models.Model):
     """Варианты ответа к вопросам"""
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, verbose_name='Вопрос')
+        Question, on_delete=models.CASCADE, verbose_name='Вопрос', related_name="choices")
     choice_text = models.CharField(max_length=200, verbose_name='Текст ответа')
     is_correct = models.BooleanField(
         default=False, verbose_name='Правильный ответ')
+
+    def __str__(self):
+        return f'ID:{str(self.id)} ; {str(self.choice_text)}'
 
 
 class QuizAttempt(models.Model):
