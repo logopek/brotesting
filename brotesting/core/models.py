@@ -32,6 +32,7 @@ class Quiz(models.Model):
     passing_score = models.IntegerField('Проходной балл')
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name='Дата создания')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'ID:{str(self.id)} ; {str(self.title)}'
@@ -65,7 +66,10 @@ class Choice(models.Model):
         default=False, verbose_name='Правильный ответ')
 
     def __str__(self):
-        return f'ID:{str(self.id)} ; {str(self.choice_text)}'
+        return f'{str(self.choice_text)}'
+
+    def __repr__(self):
+        return f'ID: {self.id}'
 
 
 class QuizAttempt(models.Model):
@@ -82,9 +86,6 @@ class QuizAttempt(models.Model):
 
 
 class StudentAnswer(models.Model):
-    """Ответ ученика"""
-    attempt = models.ForeignKey(
-        QuizAttempt, on_delete=models.CASCADE, verbose_name='Попытка')
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, verbose_name='Вопрос')
     selected_choice = models.ForeignKey(

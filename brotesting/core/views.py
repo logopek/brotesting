@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView
-from core.forms import ChoiceForm
-from .models import Course, Question, Quiz
+from core.forms import QuizSolveForm
+from .models import Course, Question, Quiz, Choice
+
+from django.http import HttpResponse
 
 
 class IndexView(View):
@@ -38,6 +40,11 @@ class QuizCreateView(CreateView):
     fields = ['title','course', 'description', 'time_limit', 'passing_score']
     success_url = reverse_lazy('core:quiz_list')
 
+    def form_valid(self, form):
+        print("VALUE!!!")
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
 
 class QuizSolveView(DetailView):
     model = Quiz
@@ -60,14 +67,16 @@ class QuizEditView(UpdateView):
     template_name = "core/quiz_edit.html"
     fields = "__all__"
 
-def results(request, pk):
-    form = ChoiceForm()
+def take_quiz_view(request, pk):
+    quiz = Quiz.objects.prefetch_related('questions').get(id=pk)
+    questions = quiz.questions.all()
+
     if request.method == 'POST':
-        form = ChceForm(request.POST)
+        form = QuizSolveForm(questions, request.POST)
         if form.is_valid():
-            form.save()
-    return render(
-        request,
-        'core/results.html',
-        {'form': form}
-    )
+            return HttpResponse("<h1>Вы ответили</h1>" + str(form))
+            pass
+    else:
+        form = QuizSolveForm(questions)
+
+    return render(request, 'core/results.html', {'form': form, 'quiz': quiz})

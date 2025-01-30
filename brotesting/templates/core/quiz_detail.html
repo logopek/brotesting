@@ -17,6 +17,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Подробности теста</h5>
                             <ul class="list-unstyled">
+                                <li><i class="bi"></i> Создан: {{ quiz.created_by.username }}</li>
                                 <li><i class="bi bi-clock"></i> Ограничение времени: {{ quiz.time_limit }} минут</li>
                                 <li><i class="bi bi-trophy"></i> Проходной балл: {{ quiz.passing_score }}%</li>
                             </ul>
