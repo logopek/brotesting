@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 {% load django_bootstrap5 %}
 {% block content %}
-    
+    {{ request.user.password }}
     <div class="container mt-4">
         <h1>{{ quiz.title }}</h1>
 <form method="post" action="result">
