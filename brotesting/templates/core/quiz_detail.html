@@ -34,6 +34,12 @@
                     Вернуться к списку тестов
                 </a>
             </div>
+             {% if user.is_authenticated and quiz.created_by == user %}
+                <div class="d-grid gap-2 col-6 mx-auto mt-3">
+                    <a href="{% url 'core:quiz_addquestions' quiz.pk %}" class="btn btn-warning">Add Questions</a>
+                    <a href="{% url 'core:quiz_view_other_results' quiz.pk%}" class="btn">See Results</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 

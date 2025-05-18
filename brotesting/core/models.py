@@ -41,9 +41,8 @@ class Quiz(models.Model):
 class Question(models.Model):
     """Вопрос в тесте"""
     QUESTION_TYPES = (
-        ('MCQ', 'Multiple Choice'),
-        ('TF', 'True/False'),
-        ('SA', 'Short Answer'),
+        ('MCQ', 'Вариант ответа'),
+        ('SA', 'Короткий ответ'),
     )
 
     quiz = models.ForeignKey(
@@ -71,6 +70,9 @@ class Choice(models.Model):
     def __repr__(self):
         return f'ID: {self.id}'
 
+    def questionLink(self, id):
+        self.question = Question.objects.filter(id=id)[0]
+        return self
 
 class QuizAttempt(models.Model):
     """Попытка прохождения теста"""
@@ -93,6 +95,10 @@ class StudentAnswer(models.Model):
     # Для тестов с открытым ответом
     text_answer = models.TextField(
         null=True, blank=True, verbose_name='Текстовый ответ')
+    
+    tf_answer = models.BooleanField(null=True, blank=True, verbose_name="Правда/Ложь")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name='Студент', null=True)
     is_correct = models.BooleanField(
         null=True, verbose_name='Правильный ответ')
 

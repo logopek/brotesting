@@ -1,12 +1,146 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
-<H1>HIIIII</H1>
-</body>
-</html>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-center" style="background-color: #4CAF50; color: white;">
+                    <h2 class="mb-0">{{ quiz.title }} - Добавить вопрос</h2>
+                </div>
+                <div class="card-body p-4">
+  
+
+  <form method="post">
+    {% csrf_token %}
+    {{ question_form.as_p }}
+    {{ formset.management_form }}
+    <h3 id="choices_list">Варианты ответа</h3>
+        {% for form in formset %}
+            <div class="choice-form">
+                {{ form.as_p }}
+                {% if form.instance.pk %}  <!-- Если запись уже существует -->
+                    {{ form.DELETE }}  <!-- Чекбокс для удаления -->
+                {% endif %}
+            </div>
+      <br>
+        {% endfor %}
+    <div class="textareat"> 
+        <textarea id="sa"></textarea>
+    </div> 
+    <div class="tf_c">
+        <input type="radio" name="tf">Да</radio>
+        <input type="radio" name="tf">Нет</radio>
+    </div>
+
+    
+    <button type="button" id="add-choice">Добавить вариант ответа</button>
+    <button type="submit">Сохранить</button>
+  </form>
+</div>
+</div>
+</div>
+</div>
+  <script>
+    function ch_visible(){
+        
+            var x = document.getElementById("id_question_type")
+            document.querySelectorAll(".choice-form").forEach(i => {
+                i.style.display = "none"
+            })
+            document.querySelectorAll("#choices_list").forEach(i => {
+                i.style.display = "none"
+            })
+            document.querySelectorAll("#add-choice").forEach(i => {
+                i.style.display = "none"
+            })
+    
+            document.querySelectorAll(".textareat").forEach(i => {
+                i.style.display = "none"
+            })
+            document.querySelectorAll(".tf_c").forEach(i => {
+                i.style.display = "none"
+            })
+            if (x.value == "MCQ"){
+                document.querySelectorAll(".choice-form").forEach(i => {
+                    i.style.display = "inline"
+                })
+                document.querySelectorAll("#choices_list").forEach(i => {
+                    i.style.display = "inline"
+                })
+                document.querySelectorAll("#add-choice").forEach(i => {
+                    i.style.display = "inline"
+                })
+            }
+            else if(x.value == "SA"){
+                document.querySelectorAll(".textareat").forEach(i => {
+                    i.style.display = "inline"
+                })
+    
+            }
+            else if(x.value == "TF"){
+                document.querySelectorAll(".tf_c").forEach(i => {
+                    i.style.display = "inline"
+                })
+            }
+          
+    }
+    ch_visible()
+      document.getElementById("id_question_type").addEventListener("change", ch_visible)
+
+
+    document.getElementById('add-choice').addEventListener('click', function() {
+    console.log("new?")
+      const totalForms = document.getElementById('id_choices-TOTAL_FORMS');
+        const formRegex = /choices-(\d+)-/g;
+
+
+    const newIndex = parseInt(totalForms.value);
+
+
+    var formset = document.querySelectorAll('.choice-form');
+      var lastForm = formset[formset.length - 1];
+    const newForm = lastForm.cloneNode(true);
+
+
+    newForm.innerHTML = newForm.innerHTML.replace(formRegex, `choices-${newIndex}-`);
+
+
+    newForm.querySelectorAll('input, select, textarea, label').forEach(element => {
+
+        if (element.id) {
+            element.id = element.id.replace(formRegex, `choices-${newIndex}-`);
+        }
+
+
+        if (element.htmlFor) {
+            element.htmlFor = element.htmlFor.replace(formRegex, `choices-${newIndex}-`);
+        }
+
+
+        if (element.name) {
+            element.name = element.name.replace(formRegex, `choices-${newIndex}-`);
+        }
+    });
+
+
+    newForm.querySelectorAll('input, select, textarea').forEach(input => {
+        if (input.type !== 'hidden' && !input.name.includes('DELETE')) {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else {
+                input.value = '';
+            }
+        }
+    });
+
+
+    totalForms.value = newIndex + 1;
+
+
+      lastForm.parentNode.insertBefore(newForm, document.getElementById('add-choice'));
+    });
+  </script>
+    <a href = "{% url 'core:quiz_detail' quiz.pk%}">Back to quiz</a>
 {% endblock %}

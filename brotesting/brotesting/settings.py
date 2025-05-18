@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
+    'tests.apps.TestsConfig',
     'django_bootstrap5',
     'widget_tweaks',
 ]

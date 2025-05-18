@@ -31,16 +31,22 @@ class QuizSolveForm(forms.Form):
                     label=question.question_text,
                     required=True
                 )
-            elif question.question_type == 'TF':  # True/False
-                self.fields[field_name] = forms.ChoiceField(
-                    choices=[('True', 'Правда'), ('False', 'Ложь')],
-                    widget=forms.RadioSelect,
-                    label=question.question_text,
-                    required=True
-                )
             elif question.question_type == 'SA':  # Короткий текстовый ответ
                 self.fields[field_name] = forms.CharField(
                     widget=forms.Textarea(attrs={"rows": 3}),
                     label=question.question_text,
                     required=False
                 )
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['quiz', 'question_text', 'question_type', 'points']
+        widgets = {
+            'quiz': forms.HiddenInput()
+        }
+
+ChoiceFormSet = forms.inlineformset_factory(
+    Question, Choice, fields=('choice_text', 'is_correct'), extra=2, can_delete=False, max_num=9090
+)
